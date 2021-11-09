@@ -41,49 +41,50 @@ const SearchBar = () => {
   const open = Boolean(anchorEl);
 
   return (
-    <>
-      <Paper
-        component='div'
-        sx={{
-          ...style,
-          p: '0.8rem 1rem',
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-        }}>
-        <InputBase
-          sx={{ ...style, ml: 1, flex: 1 }}
-          placeholder='Search for a city '
-          inputProps={{ 'aria-label': 'Search for a city' }}
-          onChange={(event) => {
-            handleChange(event);
-          }}
-        />
-        <Popper
-          open={open}
-          anchorEl={anchorEl}
-          placement='bottom-start'
-          disablePortal>
-          <Paper
-            component='div'
-            sx={{
-              bgcolor: 'background.paper',
-              width: 1152,
-              p: '0.4rem 1.2rem',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}>
-            {cities.length === 0 ? (
-              <Typography variant='subtitle2'>No Cities Found</Typography>
-            ) : (
-              <CityList cities={cities} />
-            )}
-          </Paper>
-        </Popper>
-        <SearchIcon sx={{ ...style }} />
-      </Paper>
-    </>
+    <Paper
+      component='div'
+      sx={{
+        ...style,
+        p: '0.8rem 1rem',
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+      }}>
+      <InputBase
+        sx={{ ...style, ml: 1, flex: 1 }}
+        placeholder='Search for a city '
+        inputProps={{ 'aria-label': 'Search for a city' }}
+        onChange={(event) => {
+          handleChange(event);
+        }}
+      />
+      <Popper
+        open={open}
+        anchorEl={anchorEl}
+        placement='bottom-start'
+        disablePortal
+        style={{ zIndex: 100 }}>
+        <Paper
+          component='div'
+          sx={{
+            bgcolor: 'background.paper',
+            minWidth: 1152,
+            p: '0.4rem 1.2rem',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}>
+          {cities.length === 0 ? (
+            <Typography variant='subtitle2'>
+              No Cities Found. Make sure the city name is correct.
+            </Typography>
+          ) : (
+            <CityList cities={cities} />
+          )}
+        </Paper>
+      </Popper>
+      <SearchIcon sx={{ ...style }} />
+    </Paper>
   );
 };
 

@@ -6,6 +6,7 @@ import { Container, Typography } from '@mui/material';
 // Components
 import Header from './components/layout/Header';
 import SearchBar from './components/layout/SearchBar';
+import WeatherWidgetList from './components/weather/WeatherWidgetList';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         Weather
       </Typography>
       <SearchBar />
+      <WeatherWidgetList />
     </Container>
   );
 }

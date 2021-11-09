@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import './css/weather-icons.min.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -29,6 +30,17 @@ const theme = createTheme({
     },
     secondary: {
       main: '#5d2f8f',
+    },
+  },
+  components: {
+    MuiIcon: {
+      styleOverrides: {
+        root: {
+          width: 'auto',
+          boxSizing: 'content-box',
+          padding: 4,
+        },
+      },
     },
   },
 });
