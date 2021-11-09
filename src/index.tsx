@@ -11,7 +11,21 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const theme = createTheme({
   typography: {
     fontFamily: ['Poppins', 'sans-serif'].join(','),
-    fontSize: 22,
+    fontSize: 18,
+    button: {
+      textTransform: 'none',
+    },
+  },
+  palette: {
+    background: {
+      default: '#fff6db',
+    },
+    primary: {
+      main: '#0561ad',
+    },
+    secondary: {
+      main: '#5d2f8f',
+    },
   },
 });
 
