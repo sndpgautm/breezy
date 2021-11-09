@@ -1,66 +1,41 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+// Components
+import CityList from '../city/CityList';
+
 // Material UI
-import {
-  Paper,
-  InputBase,
-  Popper,
-  Box,
-  Typography,
-  Button,
-} from '@mui/material';
+import { Paper, InputBase, Popper, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/Add';
+
+import { getCitiesWithPrefix } from '../../redux/actions/city';
+import { RootState } from '../../types';
 
 const style = {
   backgroundColor: '#dbe1d5',
 };
 
 const SearchBar = () => {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
+  const timer = useRef() as any;
 
-  const cities = [
-    {
-      id: 3290155,
-      city: 'Ab Hazar Helleh',
-      name: 'Ab Hazar Helleh',
-      country: 'Iran',
-    },
-    {
-      id: 3069020,
-      city: 'Avesnes-sur-Helpe',
-      name: 'Avesnes-sur-Helpe',
-      country: 'France',
-    },
-    {
-      id: 3223274,
-      city: 'Aybak, Helmand',
-      name: 'Aybak, Helmand',
-      country: 'Afghanistan',
-    },
-    {
-      id: 2991763,
-      city: 'Boulogne-sur-Helpe',
-      name: 'Boulogne-sur-Helpe',
-      country: 'France',
-    },
-    {
-      id: 3377784,
-      city: 'Bute Helu',
-      name: 'Bute Helu',
-      country: 'Kenya',
-    },
-    {
-      id: 128571,
-      city: 'Casa de Oro-Mount Helix',
-      name: 'Casa de Oro-Mount Helix',
-      country: 'United States of America',
-    },
-  ];
+  const cities = useSelector((state: RootState) => state.cityReducer.cities);
+
   const handleChange = (event: any) => {
     setAnchorEl(
       !event.target.value ? null : event.currentTarget.parentNode.parentNode
     );
-    console.log(event.target.value, event.currentTarget.parentNode.parentNode);
+
+    // Clear the timeout if it has already been set.
+    // This will prevent the previous change from executing axios call if it has been less than 1001 ms.
+    clearTimeout(timer.current);
+    // Set a new timeout to make axios call
+    timer.current = setTimeout(() => {
+      if (event.target.value !== '') {
+        dispatch(getCitiesWithPrefix(event.target.value));
+      }
+    }, 1001);
   };
 
   const open = Boolean(anchorEl);
@@ -84,7 +59,6 @@ const SearchBar = () => {
             handleChange(event);
           }}
         />
-
         <Popper
           open={open}
           anchorEl={anchorEl}
@@ -100,31 +74,13 @@ const SearchBar = () => {
               flexDirection: 'column',
               alignItems: 'center',
             }}>
-            {cities.map((item, index) => (
-              <Box
-                component='div'
-                sx={{
-                  bgcolor: 'background.paper',
-                  p: '0.2rem 0rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%',
-                }}>
-                <Typography variant='subtitle2' sx={{ ml: 1, flex: 1 }}>
-                  {item.city}, {item.country}
-                </Typography>
-                <Button
-                  variant='contained'
-                  color='primary'
-                  size='small'
-                  endIcon={<AddIcon />}>
-                  Add
-                </Button>
-              </Box>
-            ))}
+            {cities.length === 0 ? (
+              <Typography variant='subtitle2'>No Cities Found</Typography>
+            ) : (
+              <CityList cities={cities} />
+            )}
           </Paper>
         </Popper>
-
         <SearchIcon sx={{ ...style }} />
       </Paper>
     </>
