@@ -1,9 +1,13 @@
-import { call, put, takeLatest, delay } from '@redux-saga/core/effects';
+import { call, put, takeLatest, delay, select } from '@redux-saga/core/effects';
 import { CityService } from '../../services/CityService';
-import { City, GetCitiesWithPrefix } from '../../types';
+import { City, GetCitiesWithPrefix, RootState } from '../../types';
 import { getCitiesWithPrefixSuccess } from '../actions/city';
 import { handleApiError, clearApiError } from '../actions/error';
-import { GET_CITIES_WITH_PREFIX } from '../actions/types';
+import {
+  ADD_CITY_AS_FAV,
+  GET_CITIES_WITH_PREFIX,
+  REMOVE_CITY_FROM_FAV,
+} from '../actions/types';
 
 function* getCities(action: GetCitiesWithPrefix) {
   try {
@@ -18,5 +22,15 @@ function* getCities(action: GetCitiesWithPrefix) {
     yield put(clearApiError());
   }
 }
+function* updateLocalStorage() {
+  const favCities: City[] = yield select(
+    (state: RootState) => state.cityReducer.favCities
+  );
+  yield window.localStorage.setItem('favCities', JSON.stringify(favCities));
+}
 
-export const citySagas = [takeLatest(GET_CITIES_WITH_PREFIX, getCities)];
+export const citySagas = [
+  takeLatest(GET_CITIES_WITH_PREFIX, getCities),
+  takeLatest(ADD_CITY_AS_FAV, updateLocalStorage),
+  takeLatest(REMOVE_CITY_FROM_FAV, updateLocalStorage),
+];

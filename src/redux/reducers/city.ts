@@ -5,8 +5,13 @@ import {
   REMOVE_CITY_FROM_FAV,
 } from '../actions/types';
 
+const savedCities = () => {
+  const data = window.localStorage.getItem('favCities');
+  return data !== null ? JSON.parse(data) : [];
+};
+
 const initialState = {
-  favCities: [] as City[],
+  favCities: savedCities() as City[],
   cities: [] as City[],
   loading: true,
 };

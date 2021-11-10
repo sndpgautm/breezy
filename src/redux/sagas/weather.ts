@@ -1,4 +1,4 @@
-import { call, put, takeLatest, delay } from '@redux-saga/core/effects';
+import { call, put, delay, takeEvery } from '@redux-saga/core/effects';
 import { WeatherService } from '../../services/WeatherService';
 import { CityWeatherInfo, GetWeatherInfo } from '../../types';
 import { clearApiError, handleApiError } from '../actions/error';
@@ -20,4 +20,4 @@ function* getWeather(action: GetWeatherInfo) {
   }
 }
 
-export const weatherSagas = [takeLatest(GET_WEATHER_FOR_CITY, getWeather)];
+export const weatherSagas = [takeEvery(GET_WEATHER_FOR_CITY, getWeather)];
