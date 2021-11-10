@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 // Material UI
 import { Icon, Paper, Typography, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import moment from 'moment';
+import { City, CityWeatherInfo, RootState } from '../../types';
+import { getWeatherInfo } from '../../redux/actions/weather';
 
-const WeatherWidgetItem = () => {
+const WeatherWidgetItem = (city: City) => {
+  const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const handleMouseOver = () => {
     setShow(true);
@@ -13,35 +17,38 @@ const WeatherWidgetItem = () => {
   const handleMouseOut = () => {
     setShow(false);
   };
-  const data = {
-    weather: [
-      {
-        id: 501,
-        main: 'Rain',
-        description: 'moderate rain',
-        icon: '10n',
-      },
-    ],
-    main: {
-      temp: 3.94,
-      feels_like: 0.54,
-    },
-    dt: 1636491405,
-    timezone: 7200,
-    sys: {
-      country: 'FI',
-    },
-    name: 'Helsinki',
-  };
-  const iconClass = `wi-owm-${data.weather[0].id}`;
+
+  const weatherInfos: CityWeatherInfo[] = useSelector(
+    (state: RootState) => state.weatherReducer.weatherInfos
+  );
+
+  let currentCityWeather;
+  // Get weather info props city name
+  if (weatherInfos.length !== 0 && weatherInfos !== null) {
+    currentCityWeather = weatherInfos.find(
+      (item) => item.name === city.name && item.sys.country === city.countryCode
+    );
+  }
+
+  let iconClass;
+  if (currentCityWeather !== undefined) {
+    iconClass = `wi-owm-${currentCityWeather.weather[0].id}`;
+  }
+
+  useEffect(() => {
+    dispatch(getWeatherInfo(city.name, city.countryCode));
+  }, [dispatch, city.name, city.countryCode]);
+
   return (
     <Paper
       component='div'
       sx={{
-        p: '0.8rem 1.4rem',
+        p: '0.8rem 1.2rem',
         display: 'flex',
         flexDirection: 'column',
-        width: 300,
+        minWidth: 250,
+        maxWidth: 250,
+        minHeight: 150,
         mr: 5,
         mb: 5,
         position: 'relative',
@@ -49,45 +56,55 @@ const WeatherWidgetItem = () => {
       }}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}>
-      <Box
-        sx={{
-          display: 'flex',
-        }}>
-        <Typography variant='h4' sx={{ ml: 0, flex: 1, fontWeight: '1000' }}>
-          {Math.round(data.main.temp)}&deg;C
+      {currentCityWeather === undefined ? (
+        <Typography variant='subtitle2'>
+          No Weather data found for {city.name}
         </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-          }}>
-          <Typography
-            variant='subtitle2'
-            sx={{ fontWeight: '800', fontSize: '1rem' }}>
-            {data.name}
-          </Typography>
-          <Typography variant='body1' sx={{ fontSize: '0.8rem' }}>
-            {moment()
-              .utcOffset(data.timezone / 60)
-              .format('h:mm A')}
-          </Typography>
-        </Box>
-      </Box>
-      <Icon
-        baseClassName='wi'
-        className={iconClass}
-        color='secondary'
-        sx={{ fontSize: 120, mt: 1, mb: 3 }}></Icon>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}>
-        <Typography variant='body1' sx={{ fontSize: '1rem' }}>
-          {data.weather[0].main}
-        </Typography>
-      </Box>
+      ) : (
+        <>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}>
+            <Typography variant='h4' sx={{ ml: 0, fontWeight: '1000' }}>
+              {Math.round(currentCityWeather.main.temp)}&deg;C
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-end',
+                textAlign: 'right',
+              }}>
+              <Typography
+                variant='subtitle2'
+                sx={{ fontWeight: '800', fontSize: '0.8rem' }}>
+                {city.name}, {city.country}
+              </Typography>
+              <Typography variant='body1' sx={{ fontSize: '0.8rem' }}>
+                {moment()
+                  .utcOffset(currentCityWeather.timezone / 60)
+                  .format('h:mm A')}
+              </Typography>
+            </Box>
+          </Box>
+          <Icon
+            baseClassName='wi'
+            className={iconClass}
+            color='secondary'
+            sx={{ fontSize: 120, mt: 1, mb: 3 }}></Icon>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}>
+            <Typography variant='body1' sx={{ fontSize: '1rem' }}>
+              {currentCityWeather.weather[0].main}
+            </Typography>
+          </Box>
+        </>
+      )}
       <IconButton
         sx={{
           position: 'absolute',

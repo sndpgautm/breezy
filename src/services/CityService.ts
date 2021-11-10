@@ -9,7 +9,7 @@ const fetchCitiesWithPrefix = async (cityPrefix: string) => {
       },
     };
     const res = await axios.get(
-      `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${cityPrefix}&types=CITY&sort=name&offset=0&limit=10`,
+      `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${cityPrefix}&types=CITY&sort=-population&offset=0&limit=10`,
       config
     );
     return res.data.data;

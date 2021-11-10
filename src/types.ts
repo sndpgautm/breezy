@@ -19,7 +19,6 @@ export type Weather = {
   id: number;
   main: string;
   description: string;
-  icon: string;
 };
 
 export type CityWeatherInfo = {
@@ -28,7 +27,6 @@ export type CityWeatherInfo = {
     temp: number;
     feels_like: number;
   };
-  dt: number;
   sys: {
     country: string;
   };
@@ -59,7 +57,10 @@ export type CityActionTypes =
 
 export type GetWeatherInfo = {
   type: typeof GET_WEATHER_FOR_CITY;
-  payload: string;
+  payload: {
+    cityName: string;
+    countryCode: string;
+  };
 };
 
 export type GetWeatherInfoSuccess = {
@@ -75,8 +76,13 @@ export type CityReducerState = {
   loading: boolean;
 };
 
+export type WeatherReducerState = {
+  weatherInfos: CityWeatherInfo[] | [];
+};
+
 export type RootState = {
   cityReducer: CityReducerState;
+  weatherReducer: WeatherReducerState;
 };
 
 export type CityListProps = {

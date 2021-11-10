@@ -7,7 +7,8 @@ import { getWeatherInfoSuccess } from '../actions/weather';
 function* getWeather(action: GetWeatherInfo) {
   const weatherInfo: CityWeatherInfo = yield call(
     WeatherService.fetchWeatherInfoForCity,
-    action.payload
+    action.payload.cityName,
+    action.payload.countryCode
   );
   yield put(getWeatherInfoSuccess(weatherInfo));
 }

@@ -1,11 +1,18 @@
+import { useSelector } from 'react-redux';
+
 // Components
 import WeatherWidgetItem from './WeatherWidgetItem';
 
 // Material UI
 
-import { Container } from '@mui/material';
+import { Container, Typography } from '@mui/material';
+import { RootState } from '../../types';
 
 const WeatherWidgetList = () => {
+  const favCities = useSelector(
+    (state: RootState) => state.cityReducer.favCities
+  );
+
   return (
     <Container
       component='div'
@@ -15,8 +22,15 @@ const WeatherWidgetList = () => {
         display: 'flex',
         justifyContent: 'center',
       }}>
-      <WeatherWidgetItem />
-      <WeatherWidgetItem />
+      {favCities.length === 0 ? (
+        <Typography variant='subtitle2'>
+          Search and Add a city as favourite to continue...
+        </Typography>
+      ) : (
+        favCities.map((city, index) => (
+          <WeatherWidgetItem key={index} {...city} />
+        ))
+      )}
     </Container>
   );
 };
