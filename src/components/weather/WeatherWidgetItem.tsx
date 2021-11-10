@@ -7,6 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import moment from 'moment';
 import { City, CityWeatherInfo, RootState } from '../../types';
 import { getWeatherInfo } from '../../redux/actions/weather';
+import { removeCityFromFav } from '../../redux/actions/city';
 
 const WeatherWidgetItem = (city: City) => {
   const dispatch = useDispatch();
@@ -112,7 +113,8 @@ const WeatherWidgetItem = (city: City) => {
           right: '8px',
           display: show ? 'block' : 'none',
         }}
-        size='small'>
+        size='small'
+        onClick={() => dispatch(removeCityFromFav(city))}>
         <DeleteIcon />
       </IconButton>
     </Paper>

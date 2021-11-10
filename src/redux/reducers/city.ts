@@ -2,6 +2,7 @@ import { City, CityActionTypes } from '../../types';
 import {
   ADD_CITY_AS_FAV,
   GET_CITIES_WITH_PREFIX_SUCCESS,
+  REMOVE_CITY_FROM_FAV,
 } from '../actions/types';
 
 const initialState = {
@@ -22,6 +23,13 @@ const cityReducer = (state = initialState, action: CityActionTypes) => {
       return {
         ...state,
         favCities: [...state.favCities, action.payload],
+      };
+    case REMOVE_CITY_FROM_FAV:
+      return {
+        ...state,
+        favCities: state.favCities.filter(
+          (city) => city.id !== action.payload.id
+        ),
       };
     default:
       return state;

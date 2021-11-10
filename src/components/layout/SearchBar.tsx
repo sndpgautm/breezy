@@ -18,13 +18,18 @@ const style = {
 const SearchBar = () => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [text, setText] = useState('');
   const timer = useRef() as any;
 
   const cities = useSelector((state: RootState) => state.cityReducer.cities);
 
   const handleChange = (event: any) => {
+    event.preventDefault();
+    setText(event.target.value);
     setAnchorEl(
-      !event.target.value ? null : event.currentTarget.parentNode.parentNode
+      event.target.value === ''
+        ? null
+        : event.currentTarget.parentNode.parentNode
     );
 
     // Clear the timeout if it has already been set.
@@ -33,9 +38,14 @@ const SearchBar = () => {
     // Set a new timeout to make axios call
     timer.current = setTimeout(() => {
       if (event.target.value !== '') {
-        dispatch(getCitiesWithPrefix(event.target.value));
+        dispatch(getCitiesWithPrefix(text));
       }
     }, 1001);
+  };
+
+  const resetSearchField = () => {
+    setText('');
+    setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
@@ -54,6 +64,7 @@ const SearchBar = () => {
         sx={{ ...style, ml: 1, flex: 1 }}
         placeholder='Search for a city '
         inputProps={{ 'aria-label': 'Search for a city' }}
+        value={text}
         onChange={(event) => {
           handleChange(event);
         }}
@@ -79,7 +90,7 @@ const SearchBar = () => {
               No Cities Found. Make sure the city name is correct.
             </Typography>
           ) : (
-            <CityList cities={cities} />
+            <CityList cities={cities} resetSearchField={resetSearchField} />
           )}
         </Paper>
       </Popper>

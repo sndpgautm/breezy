@@ -13,8 +13,8 @@ const fetchCitiesWithPrefix = async (cityPrefix: string) => {
       config
     );
     return res.data.data;
-  } catch (err) {
-    console.log('Error fetching cities', err);
+  } catch (error: any) {
+    throw error;
   }
 };
 

@@ -1,10 +1,13 @@
 import { type } from 'os';
 import {
   ADD_CITY_AS_FAV,
+  CLEAR_API_ERROR,
   GET_CITIES_WITH_PREFIX,
   GET_CITIES_WITH_PREFIX_SUCCESS,
   GET_WEATHER_FOR_CITY,
   GET_WEATHER_FOR_CITY_SUCCESS,
+  HANDLE_API_ERROR,
+  REMOVE_CITY_FROM_FAV,
 } from './redux/actions/types';
 
 export type City = {
@@ -35,6 +38,8 @@ export type CityWeatherInfo = {
   name: string;
 };
 
+// City Action Types
+
 export type GetCitiesWithPrefix = {
   type: typeof GET_CITIES_WITH_PREFIX;
   payload: string;
@@ -50,10 +55,18 @@ export type AddCityAsFav = {
   payload: City;
 };
 
+export type RemoveCityFromFav = {
+  type: typeof REMOVE_CITY_FROM_FAV;
+  payload: City;
+};
+
 export type CityActionTypes =
   | GetCitiesWithPrefix
   | GetCitiesWithPrefixSuccess
-  | AddCityAsFav;
+  | AddCityAsFav
+  | RemoveCityFromFav;
+
+// Weather Action Types
 
 export type GetWeatherInfo = {
   type: typeof GET_WEATHER_FOR_CITY;
@@ -70,6 +83,19 @@ export type GetWeatherInfoSuccess = {
 
 export type WeatherActionTypes = GetWeatherInfo | GetWeatherInfoSuccess;
 
+// API Error Action Types
+
+export type HandleApiError = {
+  type: typeof HANDLE_API_ERROR;
+  payload: string;
+};
+
+export type ClearApiError = {
+  type: typeof CLEAR_API_ERROR;
+};
+
+export type ErrorActionTypes = HandleApiError | ClearApiError;
+
 export type CityReducerState = {
   favCities: City[] | [];
   cities: City[] | [];
@@ -80,11 +106,11 @@ export type WeatherReducerState = {
   weatherInfos: CityWeatherInfo[] | [];
 };
 
+export type ErrorReducerState = {
+  message: string;
+};
 export type RootState = {
   cityReducer: CityReducerState;
   weatherReducer: WeatherReducerState;
-};
-
-export type CityListProps = {
-  cities: City[];
+  errorReducer: ErrorReducerState;
 };

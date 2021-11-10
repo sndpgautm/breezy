@@ -4,9 +4,14 @@ import { Box, Typography, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 import { addCityAsFav } from '../../redux/actions/city';
-import { RootState, CityListProps, City } from '../../types';
+import { RootState, City } from '../../types';
 
-const CityList = ({ cities }: CityListProps) => {
+export type CityListProps = {
+  cities: City[];
+  resetSearchField: () => void;
+};
+
+const CityList = ({ cities, resetSearchField }: CityListProps) => {
   const dispatch = useDispatch();
   const favCities: City[] = useSelector(
     (state: RootState) => state.cityReducer.favCities
@@ -39,7 +44,10 @@ const CityList = ({ cities }: CityListProps) => {
             size='small'
             endIcon={<AddIcon />}
             disabled={isCityOnFavList(city)}
-            onClick={() => dispatch(addCityAsFav(city))}>
+            onClick={() => {
+              dispatch(addCityAsFav(city));
+              resetSearchField();
+            }}>
             Add
           </Button>
         </Box>
