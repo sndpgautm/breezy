@@ -12,7 +12,6 @@ const WeatherWidgetList = () => {
   const favCities = useSelector(
     (state: RootState) => state.cityReducer.favCities
   );
-  console.log(favCities);
 
   return (
     <Container
