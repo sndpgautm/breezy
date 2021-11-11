@@ -20,6 +20,7 @@ const WeatherWidgetList = () => {
         mt: '3rem',
         p: '0.4rem 1rem',
         display: 'flex',
+        flexWrap: 'wrap',
         justifyContent: 'center',
       }}>
       {favCities.length === 0 ? (
